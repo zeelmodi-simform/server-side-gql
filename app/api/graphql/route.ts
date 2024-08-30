@@ -1,14 +1,13 @@
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { ApolloServer } from '@apollo/server'
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default'
+import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { addMocksToSchema } from '@graphql-tools/mock'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { NextRequest } from 'next/server'
 import typeDefs from './schema'
-import resolvers from './resolvers'
 
 let plugins = []
 if (process.env.NODE_ENV === 'production') {
