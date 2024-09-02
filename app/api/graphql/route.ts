@@ -1,9 +1,56 @@
-import { NextResponse } from 'next/server'
+import { NextRequest } from 'next/server';
+
+import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+
+import { startServerAndCreateNextHandler } from '@as-integrations/next';
+
+import { getUserFromToken } from '@/utils/auth';
+import { resolvers } from './resolvers';
+import { schema } from './schema';
+
+
+let plugins = [];
+
+if (process.env.NODE_ENV === 'production') {
+  plugins = [
+    ApolloServerPluginLandingPageProductionDefault({
+      embed: true,
+      graphRef: 'myGraph@prod'
+    })
+  ]
+}
+else {
+  plugins = [
+    ApolloServerPluginLandingPageLocalDefault({
+      embed: true
+    })
+  ]
+}
+
+const server = new ApolloServer({
+  resolvers,
+  plugins,
+  typeDefs: schema
+})
+
+const handler = startServerAndCreateNextHandler<NextRequest>(server, {
+  context: async (req) => {
+    const user = await getUserFromToken(req.headers.get('Authorization') ?? '')
+
+    return {
+      req,
+      user,
+    }
+  }
+})
 
 export async function GET(request: NextRequest) {
-  return NextResponse.json({ data: {} })
+  return handler(request)
 }
 
 export async function POST(request: NextRequest) {
-  return NextResponse.json({ data: {} })
+  return handler(request)
 }
+
+

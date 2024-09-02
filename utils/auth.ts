@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken'
 import { db } from '@/db/db'
-import { eq } from 'drizzle-orm'
 import { users } from '@/db/schema'
 import bcrypt from 'bcrypt'
+import { eq } from 'drizzle-orm'
+import jwt from 'jsonwebtoken'
 
 const SECRET = 'use_an_ENV_VAR'
 
@@ -35,7 +35,7 @@ export const getUserFromToken = async (header?: string) => {
       createdAt: true,
     },
   })
-
+  
   return user
 }
 
