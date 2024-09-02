@@ -4,9 +4,8 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
-import { addMocksToSchema } from '@graphql-tools/mock'
-import { makeExecutableSchema } from '@graphql-tools/schema'
 import { NextRequest } from 'next/server'
+import resolvers from './resolvers'
 import typeDefs from './schema'
 
 let plugins = []
@@ -22,9 +21,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const server = new ApolloServer({
-  schema: addMocksToSchema({
-    schema: makeExecutableSchema({ typeDefs }),
-  }),
+  // schema: addMocksToSchema({
+  //   schema: makeExecutableSchema({ typeDefs }),
+  // }),
+  typeDefs,
+  resolvers,
   plugins,
 })
 
